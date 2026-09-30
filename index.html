@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro Salud - Sistema Completo</title>
+<style>
+body{font-family:Arial;background:#e8f5e9;margin:0}
+header{background:#2e7d32;color:white;padding:15px;text-align:center}
+nav{background:#1b5e20;display:flex;flex-wrap:wrap;justify-content:center}
+nav button{background:transparent;color:white;border:none;padding:12px 18px;cursor:pointer;font-weight:bold}
+nav button.active, nav button:hover{background:#388e3c}
+.container{padding:20px;max-width:1000px;margin:auto}
+.card{background:white;padding:20px;margin:15px 0;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+input,select{padding:10px;width:95%;margin:6px 0;border:1px solid #ccc;border-radius:6px}
+.btn{background:#2e7d32;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;margin-top:5px}
+.btn:hover{background:#1b5e20}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ddd;padding:8px;text-align:left}
+th{background:#2e7d32;color:white}
+.seccion{display:none}
+.seccion.activa{display:block}
+</style>
+</head>
+<body>
+<header><h1>🏥 Centro de Salud - Sistema Integral</h1></header>
+<nav>
+<button onclick="mostrar('pacientes')" class="active">Pacientes</button>
+<button onclick="mostrar('citas')">Citas</button>
+<button onclick="mostrar('medicos')">Médicos</button>
+<button onclick="mostrar('triaje')">Triaje</button>
+<button onclick="mostrar('inventario')">Inventario</button>
+</nav>
+<div class="container">
+
+<div id="pacientes" class="seccion activa">
+<div class="card"><h3>Registrar Paciente</h3>
+<input id="p_nombre" placeholder="Nombre completo">
+<input id="p_cedula" placeholder="Cédula">
+<input id="p_edad" type="number" placeholder="Edad">
+<input id="p_tel" placeholder="Teléfono">
+<input id="p_eps" placeholder="EPS">
+<button class="btn" onclick="guardarPaciente()">Guardar Paciente</button>
+</div>
+<div class="card"><h3>Pacientes Registrados</h3><table><thead><tr><th>Nombre</th><th>Cédula</th><th>Edad</th><th>Tel</th><th>EPS</th></tr></thead><tbody id="tablaPacientes"></tbody></table></div>
+</div>
+
+<div id="citas" class="seccion">
+<div class="card"><h3>Agendar Cita</h3>
+<input id="c_paciente" placeholder="Cédula del paciente">
+<input id="c_fecha" type="date"><input id="c_hora" type="time">
+<select id="c_medico"><option>Médico General</option><option>Pediatría</option><option>Odontología</option></select>
+<input id="c_motivo" placeholder="Motivo consulta">
+<button class="btn" onclick="guardarCita()">Agendar Cita</button>
+</div>
+<div class="card"><h3>Citas Agendadas</h3><table><thead><tr><th>Paciente</th><th>Fecha</th><th>Hora</th><th>Médico</th><th>Motivo</th></tr></thead><tbody id="tablaCitas"></tbody></table></div>
+</div>
+
+<div id="medicos" class="seccion">
+<div class="card"><h3>Registrar Médico</h3>
+<input id="m_nombre" placeholder="Nombre del médico">
+<input id="m_esp" placeholder="Especialidad">
+<input id="m_tel" placeholder="Teléfono">
+<button class="btn" onclick="guardarMedico()">Guardar Médico</button>
+</div>
+<div class="card"><h3>Personal Médico</h3><table><thead><tr><th>Nombre</th><th>Especialidad</th><th>Tel</th></tr></thead><tbody id="tablaMedicos"></tbody></table></div>
+</div>
+
+<div id="triaje" class="seccion">
+<div class="card"><h3>Signos Vitales - Triaje</h3>
+<input id="t_cedula" placeholder="Cédula paciente">
+<input id="t_presion" placeholder="Presión Ej: 120/80">
+<input id="t_temp" placeholder="Temperatura Ej: 36.5">
+<input id="t_peso" placeholder="Peso kg">
+<button class="btn" onclick="guardarTriaje()">Guardar Triaje</button>
+</div>
+<div class="card"><h3>Registros de Triaje</h3><table><thead><tr><th>Cédula</th><th>Presión</th><th>Temp</th><th>Peso</th></tr></thead><tbody id="tablaTriaje"></tbody></table></div>
+</div>
+
+<div id="inventario" class="seccion">
+<div class="card"><h3>Inventario Medicamentos</h3>
+<input id="i_nombre" placeholder="Nombre medicamento">
+<input id="i_cant" type="number" placeholder="Cantidad">
+<input id="i_vence" type="date">
+<button class="btn" onclick="guardarInventario()">Agregar al Inventario</button>
+</div>
+<div class="card"><h3>Stock</h3><table><thead><tr><th>Medicamento</th><th>Cant</th><th>Vence</th></tr></thead><tbody id="tablaInventario"></tbody></table></div>
+</div>
+
+</div>
+<script>
+function mostrar(id){
+ document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));
+ document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+ document.getElementById(id).classList.add('activa');
+ event.target.classList.add('active');
+}
+function guardarPaciente(){
+ let n=p_nombre.value,c=p_cedula.value,e=p_edad.value,t=p_tel.value,eps=p_eps.value;
+ if(!n||!c) return alert('Nombre y cédula obligatorios');
+ tablaPacientes.innerHTML+=`<tr><td>${n}</td><td>${c}</td><td>${e}</td><td>${t}</td><td>${eps}</td></tr>`;
+ p_nombre.value=p_cedula.value=p_edad.value=p_tel.value=p_eps.value='';
+}
+function guardarCita(){
+ tablaCitas.innerHTML+=`<tr><td>${c_paciente.value}</td><td>${c_fecha.value}</td><td>${c_hora.value}</td><td>${c_medico.value}</td><td>${c_motivo.value}</td></tr>`;
+}
+function guardarMedico(){
+ tablaMedicos.innerHTML+=`<tr><td>${m_nombre.value}</td><td>${m_esp.value}</td><td>${m_tel.value}</td></tr>`;
+}
+function guardarTriaje(){
+ tablaTriaje.innerHTML+=`<tr><td>${t_cedula.value}</td><td>${t_presion.value}</td><td>${t_temp.value}</td><td>${t_peso.value}</td></tr>`;
+}
+function guardarInventario(){
+ tablaInventario.innerHTML+=`<tr><td>${i_nombre.value}</td><td>${i_cant.value}</td><td>${i_vence.value}</td></tr>`;
+}
+</script>
+</body>
+</html>

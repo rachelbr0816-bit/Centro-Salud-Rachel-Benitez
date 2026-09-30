@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro Salud</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#eef2f7;font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh}
+.card{background:white;padding:30px;border-radius:15px;width:90%;max-width:400px;box-shadow:0 10px 20px rgba(0,0,0,.1)}
+h2{text-align:center}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:10px}
+button{width:100%;padding:13px;background:black;color:white;border:none;border-radius:10px;font-weight:bold;cursor:pointer;margin-top:10px}
+#msg{text-align:center;margin-top:15px;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Centro Salud - Registro</h2>
+<input id="nombre" placeholder="Nombre completo">
+<input id="documento" placeholder="Documento">
+<input id="telefono" placeholder="Telefono">
+<input id="email" placeholder="Correo">
+<select id="rol">
+<option value="">Selecciona rol</option>
+<option value="paciente">Paciente</option>
+<option value="medico">Medico</option>
+<option value="admin">Admin</option>
+<option value="recepcion">Recepcion</option>
+</select>
+<button onclick="registrar()" id="btn">Crear Cuenta</button>
+<p id="msg"></p>
+</div>
+<script>
+const supabaseClient = supabase.createClient('https://kflqoywqbkvgykrqjgjd.supabase.co','sb_publishable_U8IVzJyGCXVxTqOQ8mgDv_Z28Jg6Hd');
+async function registrar(){
+const m=document.getElementById('msg');
+const b=document.getElementById('btn');
+const datos={
+nombre:document.getElementById('nombre').value,
+documento:document.getElementById('documento').value,
+telefono:document.getElementById('telefono').value,
+email:document.getElementById('email').value,
+rol:document.getElementById('rol').value
+};
+if(!datos.nombre||!datos.documento||!datos.email||!datos.rol){m.style.color='red';m.textContent='❌ Llena todo';return;}
+m.style.color='black';m.textContent='⏳ Guardando...';b.disabled=true;
+const {error}=await supabaseClient.from('usuarios').insert([datos]);
+if(error){m.style.color='red';m.textContent='❌ '+error.message;b.disabled=false;return;}
+m.style.color='green';m.textContent='✅ Guardado!';b.disabled=false;
+}
+</script>
+</body>
+</html>
